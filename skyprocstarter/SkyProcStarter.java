@@ -15,6 +15,7 @@ import skyproc.gui.SUMGUI;
 import skyprocstarter.YourSaveFile.Settings;
 import skyproc.ARMA;
 import skyproc.genenums.Gender;
+import skyproc.genenums.Perspective;
 /**
  *
  * @author Your Name Here
@@ -33,7 +34,8 @@ public class SkyProcStarter implements SUM {
      */
     GRUP_TYPE[] importRequests = new GRUP_TYPE[]{
 	GRUP_TYPE.NPC_,
-        //GRUP_TYPE.ARMO,
+        GRUP_TYPE.ARMO,
+        GRUP_TYPE.ARMA,
         GRUP_TYPE.HDPT,
         GRUP_TYPE.FLST,
         GRUP_TYPE.RACE,
@@ -213,6 +215,27 @@ public class SkyProcStarter implements SUM {
         Random random = new Random();
         com.rits.cloning.Cloner cloner = new com.rits.cloning.Cloner();
         
+        //need to change children shoes first so they don't have human feet
+        for (ARMO h : merger.getArmors()) {
+            if(h.getEDID().equals("ClothesChildrenShoes")){
+                h.setModel("", Gender.MALE);
+                h.setModel("", Gender.FEMALE);
+                h.getArmatures().clear();
+                patch.addRecord(h);
+            }
+        }
+        
+        for (ARMA h : merger.getArmatures()) {
+            if(h.getEDID().equals("ChildrenShoesAA")){
+                h.setModelPath("", Gender.MALE, Perspective.FIRST_PERSON);
+                h.setModelPath("", Gender.FEMALE, Perspective.FIRST_PERSON);
+                h.setModelPath("", Gender.MALE, Perspective.THIRD_PERSON);
+                h.setModelPath("", Gender.FEMALE, Perspective.THIRD_PERSON);
+                patch.addRecord(h);
+            }
+        }
+        
+            
         //get old vanilla races
         //i use formids because i hope nobody's going to modify skyrim.esm
         ArrayList<FormID> npcraces = new ArrayList<FormID>();
@@ -250,14 +273,14 @@ public class SkyProcStarter implements SUM {
         //arrays of headparts good for use
         ArrayList<FormID> goodeyes = new ArrayList<FormID>();
         ArrayList<FormID> goodhair = new ArrayList<FormID>();
-        if(customization.alterHeadParts.getValue())
-        {
-            for (HDPT h : merger.getHeadParts()) {
-                if(h.getEDID().contains("Khajiit")){
-                    if(h.getEDID().contains("Eyes")){
-                        goodeyes.add(h.getForm());
-                        SPGlobal.log(version, "Added eye: " + h.getFormStr() + "; " + h.getName());
-                    }
+        for (HDPT h : merger.getHeadParts()) {
+            if(h.getEDID().contains("Khajiit")){
+                if(h.getEDID().contains("Eyes")){
+                    goodeyes.add(h.getForm());
+                    SPGlobal.log(version, "Added eye: " + h.getFormStr() + "; " + h.getName());
+                }
+                if(customization.alterHeadParts.getValue())//was supposed to work for eyes as well but turns out you always have to change them
+                {
                     if(h.getEDID().contains("Hair")){
                         goodhair.add(h.getForm());
                         SPGlobal.log(version, "Added hair: " + h.getFormStr() + "; " + h.getName());
@@ -368,17 +391,17 @@ public class SkyProcStarter implements SUM {
                     female = true;
                 
                 //head
+                ArrayList<FormID> headparts = n.getHeadParts();
+                headparts.clear();
+                headparts.add(goodeyes.get(random.nextInt(goodeyes.size())));
                 if(customization.alterHeadParts.getValue())
                 {
-                    ArrayList<FormID> headparts = n.getHeadParts();
-                    headparts.clear();
                     headparts.add(goodhair.get(random.nextInt(goodhair.size())));
-                    headparts.add(goodeyes.get(random.nextInt(goodeyes.size())));
                 }
                 n.setEyePreset(random.nextInt(6));
                 n.setNosePreset(random.nextInt(6));
                 n.setMouthPreset(random.nextInt(6));
-                //n.setFeatureSet(new FormID("000B79B6", "Skyrim.esm"));
+                n.setFeatureSet(new FormID("000B79B6", "Skyrim.esm"));
                 if(customization.alterHeights.getValue()){
                 n.setHeight((float)random.nextInt(5) / 100 + 0.97F);
                 }

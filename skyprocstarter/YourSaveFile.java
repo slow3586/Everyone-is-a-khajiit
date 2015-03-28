@@ -82,7 +82,7 @@ public class YourSaveFile extends SkyProcSave {
 		"This option will allow the patcher to change heights of npcs. Very optional.");
         
         helpInfo.put(Settings.ALTER_HEADPARTS,
-		"If you have custom hair/eyes and you want the patcher to use them, you can activate this option. They might look ridiculous sometimes.");
+		"If you have custom hairstyles and you want the patcher to use them, you can activate this option. They might look ridiculous sometimes.");
         
 	helpInfo.put(Settings.OTHER_SETTINGS,
 		"What should the patcher do.");

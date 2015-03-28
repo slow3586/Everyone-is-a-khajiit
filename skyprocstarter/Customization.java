@@ -59,7 +59,7 @@ public class Customization extends SPSettingPanel {
 	setPlacement(alterWeights);
 	AddSetting(alterWeights);
         
-        alterHeadParts = new LCheckBox("New eyes/hair", SkyProcStarter.settingsFont, SkyProcStarter.settingsColor);
+        alterHeadParts = new LCheckBox("New hair", SkyProcStarter.settingsFont, SkyProcStarter.settingsColor);
 	alterHeadParts.tie(YourSaveFile.Settings.ALTER_HEADPARTS, SkyProcStarter.save, SUMGUI.helpPanel, true);
 	alterHeadParts.setOffset(2);
 	alterHeadParts.addShadow();
